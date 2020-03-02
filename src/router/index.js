@@ -11,17 +11,49 @@ const routes = [
     component: Home
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/preview',
+    name: 'preview',
+    component: () => import(/* webpackChunkName: "about" */ '../views/preview.vue'),
+    meta: {
+      title: '表单预览'
+    }
+  },
+  {
+    path: '/editor',
+    name: 'editor',
+    component: () => import('../views/editor/index.vue'),
+    // children: [
+    //   {
+    //     path: ':id',
+    //     component: () => import('../views/editor/index.vue'),
+    //     meta: {
+    //       title: '表单编辑器'
+    //     }
+    //   }
+    // ],
+    meta: {
+      title: '表单编辑器'
+    }
   }
 ]
 
 const router = new VueRouter({
-  routes
+  routes,
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
+})
+
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title
+  // if (!to.meta.menu) {
+  //   window.JSBridge && window.JSBridge.noMenu()
+  // }
+  next()
 })
 
 export default router

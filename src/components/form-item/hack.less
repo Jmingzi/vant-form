@@ -1,0 +1,56 @@
+.render-custom {
+  padding: 10px 0;
+  background-color: #fff;
+  .van-cell:not(:last-child)::after {
+    opacity: 0;
+  }
+  .van-cell {
+    font-size: 16px;
+    display: block;
+    line-height: unset;
+    padding: 0 16px 10px 16px;
+    &.no-label {
+      .van-cell__title {
+        display: none;
+      }
+      &.van-cell--required:before {
+        opacity: 0;
+      }
+    }
+    &--required::before {
+      left: 15px;
+    }
+    &__right-icon {
+      position: absolute;
+      right: 20px;
+      top: 37px;
+    }
+    &__title {
+      margin-bottom: 5px;
+      margin-left: 10px;
+      width: auto;
+    }
+    .van-field__body {
+      border: 1px solid #E9ECF0;
+      border-radius: 4px;
+    }
+    &__value {
+      font-size: 16px;
+      input {
+        height: 44px;
+        font: inherit;
+        padding: 0 10px;
+      }
+      textarea {
+        padding: 10px;
+      }
+    }
+  }
+  .van-field__button {
+    padding: 0 8px;
+  }
+  &__confirm {
+    padding-top: 10px !important;
+    padding-bottom: 20px !important;
+  }
+}
