@@ -67,6 +67,8 @@ new Vue({
 
 ### 校验
 
+默认的提交按钮做了校验操作，如果是自行覆盖提交，需要调用校验函数。
+
 ```js
 import { validate } from 'vant-form'
 
