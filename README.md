@@ -17,8 +17,8 @@ npm i vant-form tcon --save
 
 流程
 
-- 在后台配置需要的字段，点击保存，下载到项目中
-- 在项目中安装 Render 组件，按照以下方式即可
+- 在[后台](https://iming.work/demo/vant-form/dist/index.html#/editor)配置需要的字段，点击保存，下载到项目中
+- 在项目中安装 Render 组件，按照以下方式使用即可
 
 > 方式一：组件引入
 
