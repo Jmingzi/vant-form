@@ -30,7 +30,7 @@ function fileCommon (name, res, reverse = false) {
   return true
 }
 
-app.get('/import', (req, res) => {
+app.get('/vant-form/import', (req, res) => {
   const name = req.query.name
   const file = path.resolve(fileDir, name)
   if (fileCommon(name, res)) {
@@ -38,7 +38,7 @@ app.get('/import', (req, res) => {
   }
 })
 
-app.get('/download', function (req, res) {
+app.get('/vant-form/download', function (req, res) {
   const name = req.query.name
   const file = path.resolve(fileDir, name)
   if (fileCommon(name, res)) {
@@ -50,7 +50,7 @@ app.get('/download', function (req, res) {
   }
 })
 
-app.post('/savefile', (req, res) => {
+app.post('/vant-form/savefile', (req, res) => {
   const force = req.body.force
   const file = path.resolve(fileDir, req.body.name)
   if (force || fileCommon(req.body.name, res, true)) {
@@ -59,7 +59,7 @@ app.post('/savefile', (req, res) => {
   }
 })
 
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/vant-form/upload', upload.single('file'), (req, res) => {
   const tempFile = path.resolve(__dirname, 'temp', req.file.filename)
   const content = JSON.parse(fs.readFileSync(tempFile))
   // 删除文件
