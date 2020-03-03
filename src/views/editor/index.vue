@@ -247,7 +247,7 @@ export default defineComponent({
     const handleExport = (fromServer) => {
       if (fromServer) {
         http.get('editor/download', { name: fileName.value }).then(() => {
-          let url = `${location.origin.replace(`:${location.port}`, '')}:3030/download`
+          let url = `${location.port ? 'http://localhost:3030' : ''}/vant-form/download`
           url += `?name=${fileName.value}&download=true`
           location.href = url
         })
