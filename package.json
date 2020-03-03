@@ -5,21 +5,29 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build:lib": "vue-cli-service build --mode lib --target lib --name vantForm src/components/form-item/index.js"
   },
+  "main": "dist-lib/vantForm.umd.min.js",
   "dependencies": {
     "@vue/composition-api": "^0.4.0",
-    "core-js": "^3.6.4",
     "dayjs": "^1.8.21",
     "emoji-regex": "^8.0.0",
     "esc-ui": "^2.0.2",
     "tcon": "^1.0.5",
-    "vant": "^2.5.3",
-    "vue": "^2.6.11",
-    "vue-router": "^3.1.5",
-    "vuedraggable": "^2.23.2"
+    "vant": "^2.5.3"
   },
+  "files": [
+    "dist-lib"
+  ],
   "devDependencies": {
+    "vue": "^2.6.11",
+    "core-js": "^3.6.4",
+    "vue-router": "^3.1.5",
+    "vuedraggable": "^2.23.2",
+    "express": "^4.17.1",
+    "fs-extra": "^8.1.0",
+    "multer": "^1.4.2",
     "@babel/plugin-proposal-optional-chaining": "^7.8.3",
     "@vue/cli-plugin-babel": "~4.2.0",
     "@vue/cli-plugin-eslint": "~4.2.0",

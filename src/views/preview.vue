@@ -1,36 +1,35 @@
 <script lang="jsx">
 import Render from '@/components/form-item/render'
-import { PageButton } from 'esc-ui'
+// import { PageButton } from 'esc-ui'
 import { validate } from '@/components/form-item/utils'
 import { ref } from '@vue/composition-api'
 import { Toast } from 'vant'
+import { http } from '../assets/api'
 
 export default {
   setup (p, ctx) {
     const route = ctx.root.$route
-    const isMobile = /iphone|android/.test(navigator.userAgent)
+    const isMobile = /iphone|android/i.test(navigator.userAgent)
     const data = ref({})
-    let dataList = localStorage.getItem(route.query?.key)
-    // eslint-disable-next-line
-    if (dataList) {
-      dataList = ref(JSON.parse(dataList))
-    } else {
-      dataList = ref([])
-    }
+    const dataList = ref([])
+    http.get('editor/import', { name: route.query.key }).then(res => {
+      dataList.value = res.data
+    })
+
     const render = () => (
-      <div>
-        <Render schema={dataList.value} data={data.value} />
-        <PageButton buttons={[{
-          text: '提 交',
-          color: 'rgb(255, 77, 77)',
-          click () {
+      <div style="width:100%;height:100%;padding-top:10px;overflow:auto;">
+        <Render
+          schema={dataList.value}
+          data={data.value}
+          submit={(schema, data) => {
             // 校验
-            if (validate(dataList.value, data.value)) {
+            if (validate(schema, data)) {
               Toast('提交成功，data 已打印在控制台！')
-              console.log(JSON.stringify(data.value))
+              // eslint-disable-next-line
+              console.log(JSON.stringify(data))
             }
-          }
-        }]} />
+          }}
+        />
       </div>
     )
 

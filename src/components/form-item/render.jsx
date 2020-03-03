@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Composition, { ref, onUnmounted } from '@vue/composition-api'
+import { PageButton } from 'esc-ui'
 import {
   Field,
   Radio,
@@ -54,7 +55,8 @@ Vue.use(Composition)
 
 const currentPickerIndex = ref(-1)
 
-export default ({ props: { schema, data } }) => {
+export default (params) => {
+  const { props: { schema, data, submit }, scopedSlots } = params
   onUnmounted(() => {
     resetSmsTime()
   })
@@ -387,6 +389,17 @@ export default ({ props: { schema, data } }) => {
   return (
     <div class="render-custom">
       {children}
+      { scopedSlots && scopedSlots.default ? scopedSlots.default() : (
+        <PageButton
+          buttons={[{
+            text: '提 交',
+            color: 'rgb(255, 77, 77)',
+            click () {
+              submit(schema, data)
+            }
+          }]}
+        />
+      )}
     </div>
   )
 }

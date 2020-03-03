@@ -1,39 +1,43 @@
 <template>
   <div class="editor f14">
     <div class="top h50 flex flex-center-between plr20" style="background:linear-gradient(180deg,#3d424a,#262a30)">
-      <span class="f16 c-fff">{{ orgName ? `编辑 - ${orgName}` : '表单编辑器' }}</span>
-      <div class="flex items-center">
-        <span class="c-ccc flex-center mr20 cp">
+      <div class="flex-center">
+        <span class="f16 c-fff">{{ '表单编辑器 - ' }}</span>
+        <span class="c-ccc ml10">{{ fileName || '请编辑文件名' }}</span>
+        <a href="javascript:;" class="c-aaa ml5" @click="handleFileName"><icon name="edit" /></a>
+      </div>
+      <div v-if="fileName" class="flex items-center">
+        <span class="c-ccc flex-center mr20 cp" @click="handleImport(false)">
           <icon name="upgrade" />
-          <span>导入</span>
+          <span>本地导入</span>
         </span>
-        <span class="c-ccc flex-center mr20 cp">
+        <span class="c-ccc flex-center mr20 cp" @click="handleExport(false)">
           <icon name="down" />
-          <span>导出</span>
+          <span>本地导出</span>
+        </span>
+        <span class="c-ccc flex-center mr20 cp" @click="handleImport(true)">
+          <icon name="upgrade" />
+          <span>远程导入</span>
+        </span>
+        <span class="c-ccc flex-center mr20 cp" @click="handleExport(true)">
+          <icon name="down" />
+          <span>远程下载</span>
         </span>
         <span class="c-ccc flex-center mr20 cp" @click="handleSave">
           <icon name="description" />
-          <span>保存到本地</span>
+          <span>保存</span>
         </span>
-        <span class="c-ccc mr20 flex-center cp" @click="handleDelLocal">
-          <icon name="delete" />
-          <span>清除本地</span>
+        <span class="c-ccc flex-center mr20 cp" @click="handlePreview">
+          <icon name="video-o" />
+          <span>预览</span>
         </span>
         <Button
           v-if="current"
-          style="margin-right: 10px"
           size="small"
           type="danger"
           @click="handleDel"
         >
           删除控件
-        </Button>
-        <Button
-          size="small"
-          @click="handlePreview"
-          type="info"
-        >
-          预览
         </Button>
       </div>
     </div>
@@ -158,10 +162,10 @@ import draggable from 'vuedraggable'
 import { setCurrent, setDataList, state } from './data'
 import itemList, { builtIn } from './widget'
 import formSchema from './field-schema'
-import { Field, Radio, RadioGroup, Switch, Cell, Button, Toast, Icon } from 'vant'
-// import { getTemplate } from '../../api'
+import { Field, Radio, RadioGroup, Switch, Cell, Button, Toast, Icon, Dialog } from 'vant'
 import Options from './options'
-import { getUid } from '../../components/form-item/utils'
+import { getUid, triggerUpload } from '../../components/form-item/utils'
+import { http } from '../../assets/api'
 import Render from '../../components/form-item/render'
 
 export default defineComponent({
@@ -179,27 +183,7 @@ export default defineComponent({
     Render
   },
   setup (props, ctx) {
-    // const params = ctx.root.$route.params
-    const localKey = 'widget'
-    const localData = localStorage.getItem(localKey)
-    const orgName = ref('')
-    // if (params && params.id) {
-    // getTemplate(params.id).then(res => {
-    //   orgName.value = res.data.orgName
-    if (localData) {
-      setDataList(JSON.parse(localData))
-      Toast('存在草稿，已还原草稿内容')
-    }
-    //   setDataList(res.data.config.map((x, i) => {
-    //     if (x.id) {
-    //       return x
-    //     }
-    //     x.id = i
-    //     return x
-    //   }))
-    // })
-    // }
-
+    const fileName = ref(localStorage.getItem('vant-form-file-name'))
     const schema = computed(() => {
       if (state.current) {
         const currentTypeArr = formSchema.type(state.current).options
@@ -228,14 +212,48 @@ export default defineComponent({
     //   console.log(val)
     // }, { deep: true, lazy: true })
 
-    const handleSave = (toast = true) => {
-      localStorage.setItem(localKey, JSON.stringify(state.dataList))
-      toast && Toast('保存到本地成功')
+    const handleSave = async (toast = true, force) => {
+      if (!state.dataList.length) {
+        Toast('请添加内容')
+        return
+      }
+      await Dialog.confirm({ message: '确定要保存吗？' })
+      await http.post('editor/savefile', {
+        name: fileName.value,
+        content: JSON.stringify(state.dataList),
+        force
+      }).catch(res => {
+        if (res.msg === '文件已存在') {
+          confirm('文件已存在，是否覆盖？')
+          handleSave(toast, true)
+        }
+      })
+      toast && Toast('保存到服务器成功')
     }
     const clone = (item) => {
       const newItem = JSON.parse(JSON.stringify(item))
       newItem.id = Date.now()
       return newItem
+    }
+    const handleName = () => {
+      const name = fileName.value ? fileName.value : prompt('请输入文件名，例如 schema.json')
+      if (/\.json$/.test(name)) {
+        return name
+      } else {
+        Toast('必须是 json 文件')
+        return false
+      }
+    }
+    const handleExport = (fromServer) => {
+      if (fromServer) {
+        http.get('editor/download', { name: fileName.value }).then(() => {
+          let url = `${location.origin.replace(`:${location.port}`, '')}:3030/download`
+          url += `?name=${fileName.value}&download=true`
+          location.href = url
+        })
+      } else {
+        Toast('请先保存，再远程下载')
+      }
     }
 
     return {
@@ -243,7 +261,7 @@ export default defineComponent({
       builtIn,
       schema,
       ...toRefs(state),
-      orgName,
+      fileName,
       setCurrent,
       clone,
       handleSave,
@@ -259,7 +277,8 @@ export default defineComponent({
           state.current[field] = val
         }
       },
-      handleDel () {
+      async handleDel () {
+        await Dialog.confirm({ message: '确定要删除吗？' })
         const index = state.dataList.findIndex(x => x.id === state.current.id)
         if (index > -1) {
           state.dataList.splice(index, 1)
@@ -269,15 +288,35 @@ export default defineComponent({
           Toast('该控件不存在')
         }
       },
-      handleDelLocal () {
-        localStorage.removeItem(localKey)
-        Toast('删除本地成功')
-        setDataList([])
-        setCurrent()
+      async handlePreview () {
+        await Dialog.confirm({ message: '确认保存过了吗？' })
+        ctx.root.$router.push(`/preview?key=${fileName.value}`)
       },
-      handlePreview () {
-        handleSave(false)
-        ctx.root.$router.push(`/preview?key=${localKey}`)
+      handleImport (fromServer) {
+        if (fromServer) {
+          const name = handleName()
+          if (name) {
+            http.get('editor/import', { name }).then(res => {
+              setDataList(res.data)
+              Toast('导入成功')
+            })
+          }
+        } else {
+          // 上传文件
+          triggerUpload(async (e) => {
+            const res = await http.post('editor/upload', { file: e.target.files[0] }, { isUpload: true })
+            setDataList(res.data)
+            Toast('导入成功')
+          })
+        }
+      },
+      handleExport,
+      handleFileName () {
+        const name = handleName()
+        if (name) {
+          fileName.value = name
+          localStorage.setItem('vant-form-file-name', name)
+        }
       }
     }
   }

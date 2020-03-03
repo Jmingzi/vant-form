@@ -1,24 +1,74 @@
 # vant-form
 
-## Project setup
+基于 vant 封装的可视化表单系统
+
+### 安装
+
 ```
-npm install
+# 依赖 tcon 样式
+npm i vant-form tcon --save
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
+### 使用
+
+> 方式一：组件引入
+
+```vue
+<template>
+  <vant-form 
+    :schema="schema"
+    :data="dataValue"
+    :submit="handleSubmit"
+  />
+</template>
+
+<script>
+import vantForm from 'vant-form'
+// 通过系统生成的 json 文件
+import schema from './schema.json'
+
+export default {
+  components: {
+    vantForm
+  },
+  setup () {
+    return {
+      schema,
+      dataValue: ref({}),
+      handleSubmit (schema, data) {
+        // do...
+      }   
+    } 
+  }
+}
+</script>
 ```
 
-### Compiles and minifies for production
-```
-npm run build
+> 方式二：全局引入
+
+因为组件包是 umd 格式的
+
+```js
+new Vue({
+    render (h) {
+      return h(window['vantForm'].default, {
+        props: {
+          schema: window.schema,
+          data: {}
+        }
+      })
+    }
+}).$mount('#app')
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
+### 插槽
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+提交按钮不是必须的，可以通过默认插槽来覆盖
+
+### 校验
+
+```js
+import { validate } from 'vant-form'
+
+const valid = validate(schema, data) // boolean
+```
