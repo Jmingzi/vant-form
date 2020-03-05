@@ -235,8 +235,12 @@ export default defineComponent({
       newItem.id = Date.now()
       return newItem
     }
-    const handleName = () => {
-      const name = fileName.value ? fileName.value : prompt('请输入文件名，例如 schema.json')
+    const handleName = (defaultValue) => {
+      let name = fileName.value
+      if (!name || defaultValue) {
+        name = prompt('请输入文件名，例如 schema.json', defaultValue)
+      }
+      // const name = fileName.value ? fileName.value : prompt('请输入文件名，例如 schema.json')
       if (/\.json$/.test(name)) {
         return name
       } else {
@@ -312,7 +316,7 @@ export default defineComponent({
       },
       handleExport,
       handleFileName () {
-        const name = handleName()
+        const name = handleName(fileName.value)
         if (name) {
           fileName.value = name
           localStorage.setItem('vant-form-file-name', name)
