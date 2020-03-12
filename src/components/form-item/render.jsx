@@ -463,7 +463,10 @@ function renderDate (item, data) {
   } else if (item.minDate) {
     minDate = item.minDate
   }
-  if (item.isMaxNow) {
+  if (item.toNowDays) {
+    // 最大日期为距当前(x)天
+    maxDate = dayjs().subtract(Number(item.toNowDays), 'day').format('YYYY/MM/DD')
+  } else if (item.isMaxNow) {
     maxDate = dayjs().format('YYYY/MM/DD')
   } else if (item.maxDate) {
     maxDate = item.maxDate

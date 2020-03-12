@@ -113,6 +113,10 @@ export default {
     type: 'field',
     placeholder: '2020/01/25'
   },
+  toNowDays: {
+    label: '最大日期为距当前(x)天',
+    type: 'field'
+  },
   isMinNow: {
     label: '最小为当前时间',
     type: 'switch'

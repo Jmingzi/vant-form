@@ -84,6 +84,7 @@ export default [
     maxDate: '',
     isMinNow: false,
     isMaxNow: false,
+    toNowDays: '',
     field: '',
     showPicker: false,
     placeholder: '请选择',
