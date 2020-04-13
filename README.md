@@ -42,6 +42,7 @@ export default {
   },
   setup () {
     return {
+      // schema 必须是响应式的 
       schema,
       dataValue: ref({}),
       handleSubmit (schema, data) {
