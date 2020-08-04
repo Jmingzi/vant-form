@@ -1,0 +1,30 @@
+<meta charset="utf-8">
+<title>vantForm demo</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@2.5/lib/index.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+<script src="https://unpkg.com/@vue/composition-api/dist/vue-composition-api.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vant@2.5/lib/vant.min.js"></script>
+<script src="./vantForm.umd.js"></script>
+<script>
+  Vue.use(vueCompositionApi.default)
+</script>
+<link rel="stylesheet" href="./vantForm.css">
+
+<body>
+<div id="app"></div>
+</body>
+
+<script>
+  // console.log(vantForm)
+  new Vue({
+    render: h => h(vantForm.default, {
+      props: {
+        schema: [{"id":1586760485104,"label":"单位名称","type":"text","required":true,"field":"bfbc9-94149","placeholder":"请输入","errMsg":"","ruler":"","relation":[],"info":"","displayInAdmin":false,"displayInMobile":false},{"id":1586760501242,"label":"单位类别","type":"picker","dataUrl":"","jsonp":"","params":[],"fieldMap":"path/label/value","showPicker":false,"required":false,"options":[{"label":"","value":"类别1","field":"类别1"},{"label":"","value":"类别2","field":"类别2"}],"field":"9882b-aef05","placeholder":"请选择","errMsg":"","ruler":"","relation":[],"displayInAdmin":false,"displayInMobile":false},{"id":1586760512904,"label":"统一社会信用代码","type":"text","required":false,"field":"a5549-9981e","placeholder":"请输入","errMsg":"","ruler":"","relation":[],"info":"","displayInAdmin":false,"displayInMobile":false},{"id":1584601293565,"type":"tel","label":"单位联系电话","placeholder":"请输入","field":"mobile","required":true,"errMsg":"手机号不合法","displayInAdmin":true,"displayInMobile":true,"ruler":"/^\\d{11}$/","fieldIndex9":true},{"id":1586760527087,"label":"单位注册日期","type":"date","required":false,"format":"YYYY/MM/DD","minDate":"","maxDate":"","isMinNow":false,"isMaxNow":false,"toNowDays":"","field":"bf79b-b4aa1","showPicker":false,"placeholder":"请选择","errMsg":"","ruler":"","relation":[],"displayInAdmin":false,"displayInMobile":false},{"id":1586760539871,"label":"单位地址","type":"area","required":false,"showPicker":false,"field":"ad05b-bf251","placeholder":"请选择","errMsg":"","ruler":"","relation":[],"displayInAdmin":false,"displayInMobile":false},{"id":1586760546390,"label":"","type":"text","required":false,"field":"86a7a-85fa8","placeholder":"请输入详细地址","errMsg":"","ruler":"","relation":[],"info":"","displayInAdmin":false,"displayInMobile":false}],
+        data: {},
+        submit (schema, data) {
+          console.log(data)
+        }
+      }
+    })
+  }).$mount('#app')
+</script>
