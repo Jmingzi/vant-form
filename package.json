@@ -10,12 +10,10 @@
   },
   "main": "dist-lib/vantForm.umd.min.js",
   "dependencies": {
-    "@vue/composition-api": "^0.4.0",
     "dayjs": "^1.8.21",
     "emoji-regex": "^8.0.0",
     "esc-ui": "^2.0.2",
-    "tcon": "^1.0.5",
-    "vant": "^2.5.3"
+    "tcon": "^1.0.5"
   },
   "files": [
     "dist-lib"

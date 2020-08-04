@@ -238,9 +238,9 @@ export default defineComponent({
     const handleName = (defaultValue) => {
       let name = fileName.value
       if (!name || defaultValue) {
-        name = prompt('请输入文件名，例如 schema.json', defaultValue)
+        name = prompt('请输入文件名，例如 schema.js', defaultValue)
       }
-      // const name = fileName.value ? fileName.value : prompt('请输入文件名，例如 schema.json')
+      // const name = fileName.value ? fileName.value : prompt('请输入文件名，例如 schema.js')
       if (/\.json$/.test(name)) {
         return name
       } else {

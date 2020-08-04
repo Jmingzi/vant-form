@@ -36,6 +36,9 @@ import vantForm from 'vant-form'
 // 通过系统生成的 json 文件
 import schema from './schema.json'
 
+const data = ref({})
+const schema = ref(schema)
+
 export default {
   components: {
     vantForm
@@ -43,8 +46,8 @@ export default {
   setup () {
     return {
       // schema 必须是响应式的 
-      schema,
-      dataValue: ref({}),
+      schema: schema.value,
+      dataValue: data.value,
       handleSubmit (schema, data) {
         // do...
       }   
@@ -59,12 +62,15 @@ export default {
 因为组件包是 umd 格式的
 
 ```js
+const data = ref({})
+const schema = ref(window.schema)
+
 new Vue({
     render (h) {
       return h(window['vantForm'].default, {
         props: {
-          schema: window.schema,
-          data: {}
+          schema: schema.value,
+          data: data.value
         }
       })
     }

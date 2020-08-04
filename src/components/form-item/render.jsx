@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Composition, { ref, onUnmounted } from '@vue/composition-api'
+import { ref, onUnmounted } from '@vue/composition-api'
 import { PageButton } from 'esc-ui'
 import {
   Field,
@@ -51,8 +51,7 @@ import {
 } from './config'
 import './hack.less'
 
-Vue.use(Composition)
-
+// Vue.use(Composition)
 const currentPickerIndex = ref(-1)
 
 export default (params) => {
@@ -395,7 +394,9 @@ export default (params) => {
             text: '提 交',
             color: 'rgb(255, 77, 77)',
             click () {
-              submit(schema, data)
+              if (validate(schema, data)) {
+                submit(schema, data)
+              }
             }
           }]}
         />
