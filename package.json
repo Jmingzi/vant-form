@@ -35,7 +35,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.1.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "fs-extra": "^8.1.0",
     "github-fork-ribbon-css": "^0.2.3",
     "less": "^3.0.4",
